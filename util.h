@@ -1,0 +1,20 @@
+#ifndef __UTIL_H__
+#define __UTIL_H__
+
+#include "dgemm_scalaire.h"
+#include "cblas.h"
+#include "time.h"
+#include "assert.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MIN(a,b) ((a)<(b)?(a):(b))
+
+double* init_matrix(int m, int n);
+double* rand_matrix(int size);
+void print_matrix(double* A, int size);
+
+double* rand_tri_sup(int size);
+double* rand_tri_inf(int size);
+
+#endif
