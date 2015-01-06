@@ -11,8 +11,8 @@
 #define MIN(a,b) ((a)<(b)?(a):(b))
 
 double* init_matrix(int m, int n);
-double* rand_matrix(int size);
-void print_matrix(double* A, int size);
+double* rand_matrix(int m, int n, int lda);
+void print_matrix(double* A, int m, int n, int lda);
 
 double* rand_tri_sup(int size);
 double* rand_tri_inf(int size);

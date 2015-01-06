@@ -6,26 +6,26 @@ double* init_matrix(int m, int n)
 	return L;		
 }
 
-double* rand_matrix(int size)
+double* rand_matrix(int m, int n, int lda)
 {
-	double* A = init_matrix(size,size);
+	double* A = init_matrix(m,n);
 	int i,j;
-	for (i = 0; i < size; i++){
-		for (j = 0; j < size; j++){
-			A[i + j * size] = rand()%10;
+	for (i = 0; i < m; i++){
+		for (j = 0; j < n; j++){
+			A[i + j * lda] = rand()%10;
 		}
-		A[i + i * size] = 10;
+		A[i + i * lda] = 10;
 	}
 	return A;		
 }
 
 
-void print_matrix(double* A, int size)
+void print_matrix(double* A, int m, int n, int lda)
 {
 	int i,j;
-	for (i = 0; i < size; i++){
-		for (j = 0; j < size; j++){
-			printf("%g ", A[i + j * size]);
+	for (i = 0; i < m; i++){
+		for (j = 0; j < n; j++){
+			printf("%g ", A[i + j * lda]);
 		}
 		printf("\n");
 	}
