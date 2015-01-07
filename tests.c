@@ -54,10 +54,10 @@ int test_dtrsm()
 	int n = N + 2;
 	double* U = rand_tri_sup(m);
 	double* L = rand_tri_inf(m);
-	double* B = rand_matrix(m,n);
 	double* A = init_matrix(m,n);
-	double* E = init_matrix(m,n);
+	double* B = rand_matrix(m,n);
 	double* C = copy_matrix(B,m,n,m);
+	double* E = init_matrix(m,n);
 	cblas_dtrsm(CblasColMajor, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, m, n, 1, L, m, B, m);
 	cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,m,n,m,1,L,m,B,m,1,A,m);
 	int res = !equal_matrix(0,A,C,m,n,m);
@@ -107,6 +107,9 @@ int test_dgesv()
 	int res = !equal_matrix(0,D,E,m,n,m);
 	free(A);
 	free(B);
+	free(C);
+	free(D);
+	free(E);
 	return res;
 }
 
