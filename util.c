@@ -6,30 +6,30 @@ double* init_matrix(int m, int n)
 	return L;		
 }
 
-double* rand_matrix(int size)
+double* rand_matrix(int m, int n)
 {
-	double* A = init_matrix(size,size);
-	int i,j;
-	for (i = 0; i < size; i++){
-		for (j = 0; j < size; j++){
-			A[i + j * size] = rand()%10;
+	double* A = init_matrix(m,n);
+	int i,j, lda = m;
+	for (i = 0; i < m; i++){
+		for (j = 0; j < n; j++){
+			A[i + j * lda] = rand()%10;
 		}
-		A[i + i * size] = 10;
+		A[i + i * lda] = 10;
 	}
 	return A;		
 }
 
 
-void print_matrix(double* A, int size)
+void print_matrix(double* A, int m, int n, int lda)
 {
 	int i,j;
-	for (i = 0; i < size; i++){
-		for (j = 0; j < size; j++){
-			printf("%g ", A[i + j * size]);
+	for (i = 0; i < m; i++){
+		for (j = 0; j < n; j++){
+			printf("%g  ", A[i + j * lda]);
 		}
 		printf("\n");
 	}
-
+	printf("\n");
 }
 
 double* rand_tri_inf(int size)
@@ -56,4 +56,55 @@ double* rand_tri_sup(int size)
 		U[i + i * size] = 10;
 	}
 	return U;		
+}
+
+double* copy_matrix(double* B, int m, int n, int lda)
+{
+	double* A = init_matrix(m,n);
+	int i,j;
+	for (i = 0; i < m; i++){
+		for (j = 0; j < n; j++){
+			A[i + j * lda] = B[i + j * lda];
+		}
+	}
+	return A;
+}
+
+
+int equal_matrix(int UPLO, double* A, double* B, int m, int n, int lda)
+{
+	double epsilon = 0.00001;
+	switch (UPLO){
+		case 0: // ordinary matrix
+		for (int i = 0; i < m; ++i){
+			for (int j = 0; j < n; ++j){
+				if (fabs(A[i + j * lda] - B[i + j * lda]) > epsilon ){
+					fprintf(stderr,"[%d %d] %g != %g\n",i,j, A[i + j * lda], B[i + j * lda]);
+					return 0;
+				}
+			}
+		}
+		break;
+		case 1: // UPPER matrix
+		for (int i = 0; i < m; ++i){
+			for (int j = i; j < n; ++j){
+				if (fabs(A[i + j * lda] - B[i + j * lda]) > epsilon ){
+					fprintf(stderr,"[%d %d] %g != %g\n",i,j, A[i + j * lda], B[i + j * lda]);
+					return 0;
+				}
+			}
+		}
+		break;
+		case 2: // LOWER matrix
+		for (int i = 0; i < m; ++i){
+			for (int j = 0; j < i; ++j){
+				if (fabs(A[i + j * lda] - B[i + j * lda]) > epsilon ){
+					fprintf(stderr,"[%d %d] %g != %g\n",i,j, A[i + j * lda], B[i + j * lda]);
+					return 0;
+				}
+			}
+		}
+		break;
+	} 
+	return 1;
 }
