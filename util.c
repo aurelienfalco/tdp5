@@ -6,10 +6,10 @@ double* init_matrix(int m, int n)
 	return L;		
 }
 
-double* rand_matrix(int m, int n, int lda)
+double* rand_matrix(int m, int n)
 {
 	double* A = init_matrix(m,n);
-	int i,j;
+	int i,j, lda = m;
 	for (i = 0; i < m; i++){
 		for (j = 0; j < n; j++){
 			A[i + j * lda] = rand()%10;
@@ -56,4 +56,51 @@ double* rand_tri_sup(int size)
 		U[i + i * size] = 10;
 	}
 	return U;		
+}
+
+double* copy_matrix(double* B, int m, int n, int lda)
+{
+	double* A = init_matrix(m,n);
+	int i,j;
+	for (i = 0; i < m; i++){
+		for (j = 0; j < n; j++){
+			A[i + j * lda] = B[i + j * lda];
+		}
+	}
+	return A;
+}
+
+
+int equal_matrix(int UPLO, double* A, double* B, int m, int n, int lda)
+{
+	switch (UPLO){
+		case 0: // ordinary matrix
+		for (int i = 0; i < m; ++i){
+			for (int j = 0; j < n; ++j){
+				if (A[i + j * lda] != B[i + j * lda]){
+					return 0;
+				}
+			}
+		}
+		break;
+		case 1: // UPPER matrix
+		for (int i = 0; i < m; ++i){
+			for (int j = i; j < n; ++j){
+				if (A[i + j * lda] != B[i + j * lda]){
+					return 0;
+				}
+			}
+		}
+		break;
+		case 2: // LOWER matrix
+		for (int i = 0; i < m; ++i){
+			for (int j = 0; j < i; ++j){
+				if (A[i + j * lda] != B[i + j * lda]){
+					return 0;
+				}
+			}
+		}
+		break;
+	} 
+	return 1;
 }

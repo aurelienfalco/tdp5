@@ -571,6 +571,7 @@ void LAPACKE_dgetf2(const enum CBLAS_ORDER matrix_order, int m, int n,
    double* a, int lda, int* ipiv );
 int LAPACKE_dgesv(const enum CBLAS_ORDER matrix_order, int n, int nrhs, double* a, int lda, int* ipiv, double* b, int ldb );
 int LAPACKE_dgetrf(const enum CBLAS_ORDER  matrix_order, int m, int n, double* a, int lda, int* ipiv);
+void cblas_lu(const enum CBLAS_ORDER order, const int m, const int n, double* a, int lda, int nb);
 #endif
 
 

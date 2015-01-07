@@ -20,26 +20,32 @@ int test_triangular()
 	return 0;
 }
 
+int test_copy()
+{
+	int n = N;
+	int m = N + rand()%5;
+	double* A = rand_matrix(m,n);
+	double* B = copy_matrix(A, m, n, m);
+	int res = equal_matrix(0,A,B,m,n,m);
+	free(A);
+	free(B);
+	return !res;
+}
+
 int test_dgetf2()
 {
 	int n = N;
+	int m = n;
 	double* L = rand_tri_inf(n);
 	double* U = rand_tri_sup(n);
-	printf("matrix L\n");
-	print_matrix(L,n,n,n);
-	printf("matrix U\n");
-	print_matrix(U,n,n,n);
 	double* A = init_matrix(n,n);
 	cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,n,n,n,1,L,n,U,n,1,A,n);
-	printf("matrix A\n");
-	print_matrix(A,n,n,n);
 	LAPACKE_dgetf2(CblasColMajor,n,n,A,n,NULL);
-	printf("matrix A = LU\n");
-	print_matrix(A,n,n,n);
+	int res = !equal_matrix(1,A,U,m,n,m) || !equal_matrix(2,A,L,m,n,m);
 	free(A);  
 	free(L);  
 	free(U);
-	return 0;
+	return res;
 }
 
 int test_dtrsm()
@@ -48,7 +54,10 @@ int test_dtrsm()
 	int n = N + 2;
 	double* U = rand_tri_sup(m);
 	double* L = rand_tri_inf(m);
-	double* B = rand_matrix(m,n,m);
+	double* B = rand_matrix(m,n);
+	double* A = init_matrix(m,n);
+	double* E = init_matrix(m,n);
+	double* C = copy_matrix(B,m,n,m);
 	printf("matrix L\n");
 	print_matrix(L,m,m,m);
 	printf("matrix U\n");
@@ -57,10 +66,17 @@ int test_dtrsm()
 	print_matrix(B,m,n,m);
 	cblas_dtrsm(CblasColMajor, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, m, n, 1, L, m, B, m);
 	printf("dtrsm L Y = B\n");
-	print_matrix(B,m,n,m);
+	cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,m,n,m,1,L,m,B,m,1,A,m);
+	int res = !equal_matrix(0,A,C,m,n,m);
+	
+	double* D = copy_matrix(B,m,n,m);
+	print_matrix(D,m,n,m);
 	cblas_dtrsm(CblasColMajor, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, m, n, 1, U, m, B, m);
 	printf("dtrsm U X = Y\n");
-	print_matrix(B,m,n,m);
+	cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,m,n,m,1,U,m,B,m,1,E,m);
+	print_matrix(A,m,n,m);
+	res |= !equal_matrix(0,E,D,m,n,m);
+	printf("%d\n",res );
 	// vérifier avec dgemm
 	free(U);
 	free(L);
@@ -71,20 +87,24 @@ int test_dtrsm()
 int test_dgetrf()
 {
 	int n = N;
-	double* A = rand_matrix(n,n,n);
-	printf("matrix A\n");
-	print_matrix(A,n,n,n);
+	int m = N;
+	double* L = rand_tri_inf(n);
+	double* U = rand_tri_sup(n);
+	double* A = init_matrix(n,n);
+	cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,n,n,n,1,L,n,U,n,1,A,n);
 	LAPACKE_dgetrf(CblasColMajor, n, n, A, n, NULL);
-	print_matrix(A,n,n,n);
+	int res = !equal_matrix(1,A,U,m,n,m) || !equal_matrix(2,A,L,m,n,m);
+	free(L);
+	free(U);
 	free(A);
-	return 0;
+	return res;
 }
 
 int test_dgesv()
 {
 	int n = N;
-	double* A = rand_matrix(n,n,n);
-	double* B = rand_matrix(n,n,n);
+	double* A = rand_matrix(n,n);
+	double* B = rand_matrix(n,n);
 	printf("matrix A\n");
 	print_matrix(A,n,n,n);
 	printf("matrix B\n");
@@ -97,6 +117,28 @@ int test_dgesv()
 	return 0;
 }
 
+int test_lu_block()
+{
+	int n = N;
+	double* L = rand_tri_inf(n);
+	double* U = rand_tri_sup(n);
+	printf("matrix L\n");
+	print_matrix(L,n,n,n);
+	printf("matrix U\n");
+	print_matrix(U,n,n,n);
+	double* A = init_matrix(n,n);
+	cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,n,n,n,1,L,n,U,n,1,A,n);
+	printf("matrix A\n");
+	print_matrix(A,n,n,n);
+	cblas_lu(CblasColMajor, n, n, A, n, 1);
+	printf("lu block A = LU\n");
+	print_matrix(A,n,n,n);
+	free(L);
+	free(U);
+	free(A);
+	return 0;
+}
+
 
 int main(int argc, char** argv){
 	(void)argc;	(void)argv;
@@ -105,11 +147,15 @@ int main(int argc, char** argv){
 	printf("Test random triangular matrix....\n");
 	assert(!test_triangular());
 	printf("[OK]\n");
-
+	*/
 	printf("Test dgetf2....\n");
 	assert(!test_dgetf2());
 	printf("[OK]\n");
-	*/
+
+	printf("Test copy....\n");
+	assert(!test_copy());
+	printf("[OK]\n");
+	
 	printf("Test dtrsm....\n");
 	assert(!test_dtrsm());
 	printf("[OK]\n");
@@ -118,9 +164,12 @@ int main(int argc, char** argv){
 	assert(!test_dgetrf());
 	printf("[OK]\n");
 
-
 	printf("Test dgesv....\n");
 	assert(!test_dgesv());
+	printf("[OK]\n");
+
+	printf("Test lu block....\n");
+	assert(!test_lu_block());
 	printf("[OK]\n");
 
 	// appeler tests
