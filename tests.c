@@ -58,30 +58,23 @@ int test_dtrsm()
 	double* A = init_matrix(m,n);
 	double* E = init_matrix(m,n);
 	double* C = copy_matrix(B,m,n,m);
-	printf("matrix L\n");
-	print_matrix(L,m,m,m);
-	printf("matrix U\n");
-	print_matrix(U,m,m,m);
-	printf("matrix B\n");
-	print_matrix(B,m,n,m);
 	cblas_dtrsm(CblasColMajor, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, m, n, 1, L, m, B, m);
-	printf("dtrsm L Y = B\n");
 	cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,m,n,m,1,L,m,B,m,1,A,m);
 	int res = !equal_matrix(0,A,C,m,n,m);
 	
 	double* D = copy_matrix(B,m,n,m);
-	print_matrix(D,m,n,m);
 	cblas_dtrsm(CblasColMajor, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, m, n, 1, U, m, B, m);
-	printf("dtrsm U X = Y\n");
 	cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,m,n,m,1,U,m,B,m,1,E,m);
-	print_matrix(A,m,n,m);
 	res |= !equal_matrix(0,E,D,m,n,m);
-	printf("%d\n",res );
-	// vérifier avec dgemm
 	free(U);
 	free(L);
 	free(B);
-	return 0;
+	free(A);
+	free(B);
+	free(C);
+	free(D);
+	free(E);
+	return res;
 }
 
 int test_dgetrf()
@@ -102,19 +95,19 @@ int test_dgetrf()
 
 int test_dgesv()
 {
+	int m = N;
 	int n = N;
-	double* A = rand_matrix(n,n);
-	double* B = rand_matrix(n,n);
-	printf("matrix A\n");
-	print_matrix(A,n,n,n);
-	printf("matrix B\n");
-	print_matrix(B,n,n,n);
-	LAPACKE_dgesv(CblasColMajor, n, 0, A, n, NULL, B, n);
-	printf("dgesv A X = B\n");
-	print_matrix(B,n,n,n);
+	double* A = rand_matrix(m,n);
+	double* B = rand_matrix(m,n);
+	double* C = copy_matrix(A,m,n,m);
+	double* D = copy_matrix(B,m,n,m);
+	double* E = init_matrix(m,n);
+	LAPACKE_dgesv(CblasColMajor, m, 0, A, m, NULL, B, m);
+	cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,m,n,m,1,C,m,B,m,1,E,m);
+	int res = !equal_matrix(0,D,E,m,n,m);
 	free(A);
 	free(B);
-	return 0;
+	return res;
 }
 
 int test_lu_block()
@@ -133,9 +126,9 @@ int test_lu_block()
 	cblas_lu(CblasColMajor, n, n, A, n, 1);
 	printf("lu block A = LU\n");
 	print_matrix(A,n,n,n);
-	free(L);
-	free(U);
-	free(A);
+	// free(L);
+	// free(U);
+	// free(A);
 	return 0;
 }
 

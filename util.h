@@ -7,6 +7,7 @@
 #include "assert.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 #define MIN(a,b) ((a)<(b)?(a):(b))
 
