@@ -25,11 +25,11 @@ void print_matrix(double* A, int m, int n, int lda)
 	int i,j;
 	for (i = 0; i < m; i++){
 		for (j = 0; j < n; j++){
-			printf("%g ", A[i + j * lda]);
+			printf("%g  ", A[i + j * lda]);
 		}
 		printf("\n");
 	}
-
+	printf("\n");
 }
 
 double* rand_tri_inf(int size)
@@ -79,7 +79,7 @@ int equal_matrix(int UPLO, double* A, double* B, int m, int n, int lda)
 		for (int i = 0; i < m; ++i){
 			for (int j = 0; j < n; ++j){
 				if (fabs(A[i + j * lda] - B[i + j * lda]) > epsilon ){
-					printf("%g != %g\n", A[i + j * lda], B[i + j * lda]);
+					fprintf(stderr,"[%d %d] %g != %g\n",i,j, A[i + j * lda], B[i + j * lda]);
 					return 0;
 				}
 			}
@@ -89,7 +89,7 @@ int equal_matrix(int UPLO, double* A, double* B, int m, int n, int lda)
 		for (int i = 0; i < m; ++i){
 			for (int j = i; j < n; ++j){
 				if (fabs(A[i + j * lda] - B[i + j * lda]) > epsilon ){
-					printf("%g != %g\n", A[i + j * lda], B[i + j * lda]);
+					fprintf(stderr,"[%d %d] %g != %g\n",i,j, A[i + j * lda], B[i + j * lda]);
 					return 0;
 				}
 			}
@@ -99,7 +99,7 @@ int equal_matrix(int UPLO, double* A, double* B, int m, int n, int lda)
 		for (int i = 0; i < m; ++i){
 			for (int j = 0; j < i; ++j){
 				if (fabs(A[i + j * lda] - B[i + j * lda]) > epsilon ){
-					printf("%g != %g\n", A[i + j * lda], B[i + j * lda]);
+					fprintf(stderr,"[%d %d] %g != %g\n",i,j, A[i + j * lda], B[i + j * lda]);
 					return 0;
 				}
 			}

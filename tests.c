@@ -32,6 +32,27 @@ int test_copy()
 	return !res;
 }
 
+int test_dgemm()
+{
+	int m = N;
+	int n = N+1;
+	int l = N+2;
+	double* A = rand_matrix(m,n);
+	double* B = rand_matrix(n,l);
+	double* C = init_matrix(m,l);
+	cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,m,l,n,1,A,m,B,n,1,C,m);
+	printf("A\n");
+	print_matrix(A,m,n,m);
+	printf("B\n");
+	print_matrix(B,n,l,n);
+	printf("C\n");
+	print_matrix(C,m,l,m);
+	free(A);  
+	free(B);  
+	free(C);
+	return 0;
+}
+
 int test_dgetf2()
 {
 	int n = N;
@@ -115,24 +136,18 @@ int test_dgesv()
 
 int test_lu_block()
 {
+	int m = N;
 	int n = N;
 	double* L = rand_tri_inf(n);
 	double* U = rand_tri_sup(n);
-	printf("matrix L\n");
-	print_matrix(L,n,n,n);
-	printf("matrix U\n");
-	print_matrix(U,n,n,n);
 	double* A = init_matrix(n,n);
 	cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,n,n,n,1,L,n,U,n,1,A,n);
-	printf("matrix A\n");
-	print_matrix(A,n,n,n);
 	cblas_lu(CblasColMajor, n, n, A, n, 1);
-	printf("lu block A = LU\n");
-	print_matrix(A,n,n,n);
-	// free(L);
-	// free(U);
-	// free(A);
-	return 0;
+	int res = !equal_matrix(1,A,U,m,n,m) || !equal_matrix(2,A,L,m,n,m);
+	free(L);
+	free(U);
+	free(A);
+	return res;
 }
 
 
@@ -142,6 +157,10 @@ int main(int argc, char** argv){
 	/*
 	printf("Test random triangular matrix....\n");
 	assert(!test_triangular());
+	printf("[OK]\n");
+
+	printf("Test dgemm....\n");
+	assert(!test_dgemm());
 	printf("[OK]\n");
 	*/
 	printf("Test dgetf2....\n");
@@ -161,7 +180,7 @@ int main(int argc, char** argv){
 	printf("[OK]\n");
 
 	printf("Test dgesv....\n");
-	assert(!test_dgesv());
+	// assert(!test_dgesv());
 	printf("[OK]\n");
 
 	printf("Test lu block....\n");
