@@ -27,7 +27,7 @@ tests: $(OBJ) tests.o
 	$(CC) $(CFLAGS) $^ -o $@ -lm
 
 test: tests
-	./tests
+	./tests $(N)
 
 plot: 
 	@gnuplot -e "name='$(stat)';output='$(stat).png" plot_fox.gp 

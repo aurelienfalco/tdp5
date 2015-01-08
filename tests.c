@@ -4,7 +4,7 @@
 #include <assert.h>
 #include "util.h"
 
-#define N 3
+unsigned int N = 3;
 
 int test_triangular()
 {
@@ -89,7 +89,6 @@ int test_dtrsm()
 	res |= !equal_matrix(0,E,D,m,n,m);
 	free(U);
 	free(L);
-	free(B);
 	free(A);
 	free(B);
 	free(C);
@@ -140,7 +139,7 @@ int test_lu_block()
 	int n = N;
 	double* L = rand_tri_inf(n);
 	double* U = rand_tri_sup(n);
-	double* A = init_matrix(n,n);
+	double* A = init_matrix(m,n);
 	cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,n,n,n,1,L,n,U,n,1,A,n);
 	cblas_lu(CblasColMajor, n, n, A, n, 1);
 	int res = !equal_matrix(1,A,U,m,n,m) || !equal_matrix(2,A,L,m,n,m);
@@ -154,6 +153,11 @@ int test_lu_block()
 int main(int argc, char** argv){
 	(void)argc;	(void)argv;
 	srand(time(NULL));
+	if (argc > 1){
+		N = atoi(argv[1]);
+		printf("%d\n", N);
+	}
+
 	/*
 	printf("Test random triangular matrix....\n");
 	assert(!test_triangular());

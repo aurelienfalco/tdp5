@@ -14,7 +14,7 @@ double* rand_matrix(int m, int n)
 		for (j = 0; j < n; j++){
 			A[i + j * lda] = rand()%10;
 		}
-		A[i + i * lda] = 10;
+		A[i + i * lda] = rand()%10 + 10;
 	}
 	return A;		
 }
@@ -53,7 +53,7 @@ double* rand_tri_sup(int size)
 		for (j = i+1; j < size; j++){
 			U[i + j * size] = rand()%10;
 		}
-		U[i + i * size] = 10;
+		U[i + i * size] = rand()%10 + 10;
 	}
 	return U;		
 }
