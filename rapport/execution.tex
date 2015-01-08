@@ -7,7 +7,7 @@ De même, le code a été segmenté pour permettre une lecture plus aisée de l'
 \section{Performances} % (fold)
 \label{sec:perf}
 
-Une série de tests est lancée sur différentes tailles de matrice plusieurs fois, afin d'obtenir des temps d'exécution moyens.
+Une série de tests est lancée sur différentes tailles de matrice plusieurs fois, afin d'obtenir des temps d'exécution moyens. Nous avons remarqué que pour des matrices de taille croissantes, des erreurs de calcul apparaissaient. Ainsi, pour des matrics de taille $30 \times 30$, les erreurs commençaient à être significatives dans le calcul du dtrsm (de l'ordre de $0.1$).\\
 Les courbes de performances ont été tracées avec gnuplot et permettent de savoir où le programme passe le plus de temps (Fig. \ref{fig:diff}). On peut voir que pour des dimensions de matrice de plus en plus grandes, c'est surtout le calcul de la multiplication qui augmente. En effet, nous ne faisons pas varier le nombre de processus; la charge de chaque processus augmente donc fortement.
 
 \begin{figure}[H]
