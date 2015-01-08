@@ -4,7 +4,7 @@ EXEC = lu
 ALG = dger dgetf2 lu dscal util dgemm_scalaire dtrsm dgesv dgetrf
 SRC=$(ALG:=.c)
 OBJ=$(SRC:.c=.o)
-CFLAGS = -std=c99 -O2 -Wall -Wextra
+CFLAGS = -std=c99 -g -O0 -Wall -Wextra
 
 all: $(EXEC)
 
