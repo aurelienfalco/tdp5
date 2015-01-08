@@ -1,8 +1,10 @@
 #include "util.h"
 
+float epsilon = 0.0001;
+
 double* init_matrix(int m, int n)
 {
-	double* L = calloc(m*n,sizeof(double));
+	double* L = calloc(m * n,sizeof(double));
 	return L;		
 }
 
@@ -14,7 +16,8 @@ double* rand_matrix(int m, int n)
 		for (j = 0; j < n; j++){
 			A[i + j * lda] = rand()%10;
 		}
-		A[i + i * lda] = 10;
+		if (m <= n)
+			A[i + i * lda] = rand()%10 + 10;
 	}
 	return A;		
 }
@@ -53,7 +56,7 @@ double* rand_tri_sup(int size)
 		for (j = i+1; j < size; j++){
 			U[i + j * size] = rand()%10;
 		}
-		U[i + i * size] = 10;
+		U[i + i * size] = rand()%10 + 10;
 	}
 	return U;		
 }
@@ -73,13 +76,12 @@ double* copy_matrix(double* B, int m, int n, int lda)
 
 int equal_matrix(int UPLO, double* A, double* B, int m, int n, int lda)
 {
-	double epsilon = 0.00001;
 	switch (UPLO){
 		case 0: // ordinary matrix
 		for (int i = 0; i < m; ++i){
 			for (int j = 0; j < n; ++j){
-				if (fabs(A[i + j * lda] - B[i + j * lda]) > epsilon ){
-					fprintf(stderr,"[%d %d] %g != %g\n",i,j, A[i + j * lda], B[i + j * lda]);
+				if (fabs(A[i + j * lda] - B[i + j * lda]) > epsilon){
+					fprintf(stderr,"[%d %d]\t %g != %g \t (précision %g)\n",i,j, A[i + j * lda], B[i + j * lda], epsilon);
 					return 0;
 				}
 			}
@@ -88,8 +90,8 @@ int equal_matrix(int UPLO, double* A, double* B, int m, int n, int lda)
 		case 1: // UPPER matrix
 		for (int i = 0; i < m; ++i){
 			for (int j = i; j < n; ++j){
-				if (fabs(A[i + j * lda] - B[i + j * lda]) > epsilon ){
-					fprintf(stderr,"[%d %d] %g != %g\n",i,j, A[i + j * lda], B[i + j * lda]);
+				if (fabs(A[i + j * lda] - B[i + j * lda]) > epsilon){
+					fprintf(stderr,"[%d %d]\t %g != %g \t (précision %g)\n",i,j, A[i + j * lda], B[i + j * lda], epsilon);
 					return 0;
 				}
 			}
@@ -98,8 +100,8 @@ int equal_matrix(int UPLO, double* A, double* B, int m, int n, int lda)
 		case 2: // LOWER matrix
 		for (int i = 0; i < m; ++i){
 			for (int j = 0; j < i; ++j){
-				if (fabs(A[i + j * lda] - B[i + j * lda]) > epsilon ){
-					fprintf(stderr,"[%d %d] %g != %g\n",i,j, A[i + j * lda], B[i + j * lda]);
+				if (fabs(A[i + j * lda] - B[i + j * lda]) > epsilon){
+					fprintf(stderr,"[%d %d]\t %g != %g \t (précision %g)\n",i,j, A[i + j * lda], B[i + j * lda], epsilon);
 					return 0;
 				}
 			}
