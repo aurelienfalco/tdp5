@@ -26,9 +26,8 @@ void serpentinSuivant(int *value, int *inc, const int max) {
 
 void mpi_cblas_lu(const enum CBLAS_ORDER order, const int m, const int n, double* a, int lda, int block_size)
 {
-	MPI_Datatype block_matrix, type_matrix, type_column;
-	int blocks_by_line = (m/block_size);
-	int nb_blocks = blocks_by_line * blocks_by_line;
+	MPI_Datatype type_column;
+	int blocks_per_line = (m/block_size);
 	//int disps[nb_blocks];
 	//int counts[nb_blocks];
 	int side_size = m, myrank, nb_procs;
@@ -60,7 +59,7 @@ void mpi_cblas_lu(const enum CBLAS_ORDER order, const int m, const int n, double
 
 	// Count the number of columns owned
 		next_val = 0; inc = 1;
-		for (i = 0; i < blocks_by_line; i++) {
+		for (i = 0; i < blocks_per_line; i++) {
 			if (next_val == myrank)
 				nb_cols++;
 			serpentinSuivant(&next_val, &inc, nb_procs);
@@ -76,7 +75,7 @@ void mpi_cblas_lu(const enum CBLAS_ORDER order, const int m, const int n, double
 		if (myrank == 0) {
 			next_val = 0; inc = 1;
 			j = 0;
-			for (i = 0; i < blocks_by_line; i++) {
+			for (i = 0; i < blocks_per_line; i++) {
 				if (next_val == myrank) {
 					memcpy(columns[j], &a[i * col_size], col_size * sizeof(double));
 					cols_ref[j++] = i;
@@ -94,8 +93,6 @@ void mpi_cblas_lu(const enum CBLAS_ORDER order, const int m, const int n, double
 			MPI_Recv(columns[i], 1, type_column, 0, 99, MPI_COMM_WORLD, &status);
 		}
 	}
-
-
 	
 	next_val = 0; inc = 1; j = 0;
 	for (int i = 0; i < MIN(m,n); i+=block_size) {
@@ -130,6 +127,25 @@ void mpi_cblas_lu(const enum CBLAS_ORDER order, const int m, const int n, double
 	// ++ Chaque processus fait un trsm sur le premier bloc de sa colonne (il faut attendre le bloc de la première colonne)
 	// ++ puis fait un gemm sur les autres (il faut aussi attendre le bloc de la première colonne)
 	// print_matrix(left_col, side_size, block_size, side_size);
+	
+	if (myrank == 0) {
+		next_val = 0; inc = 1; j = 0;
+		for (i = 0; i < blocks_per_line; i++) {
+			if (next_val == myrank) {
+				memcpy(&a[i * col_size], columns[j++], col_size * sizeof(double));
+			}
+			else {
+				MPI_Recv(&a[i * col_size], 1, type_column, next_val, 99, MPI_COMM_WORLD, &status);
+			}
+			serpentinSuivant(&next_val, &inc, nb_procs);
+		}
+	}
+	else{
+		for (i = 0; i < nb_cols; i++) {
+			MPI_Send(columns[i], 1, type_column, 0, 99, MPI_COMM_WORLD);
+		}
+	}
+	
 	free(cols_ref);
 	free(left_col);
 	for (i = 0; i < nb_cols; i++) {

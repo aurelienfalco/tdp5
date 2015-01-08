@@ -59,6 +59,8 @@ int main(int argc, char const *argv[])
 
 	mpi_cblas_lu(CblasColMajor, m, n, a, m, block_size);
 	
+	print_matrix(a, m, n, m);
+	
 	free(a);
 	
     return 0;
