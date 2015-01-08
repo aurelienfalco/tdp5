@@ -208,7 +208,12 @@ int test_lu_block()
 	double* U = rand_tri_sup(n);
 	double* A = init_matrix(m,n);
 	cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,n,n,n,1,L,n,U,n,1,A,n);
-	cblas_lu(CblasColMajor, n, n, A, n, 1);
+	if (print){
+		printf("A\n");
+		print_matrix(A,m,n,m);
+	}	
+
+	cblas_lu(CblasColMajor, n, n, A, n, 3);
 	int equal = equal_matrix(1,A,U,m,n,m) && equal_matrix(2,A,L,m,n,m);
 	if (print){
 		printf("L\n");
