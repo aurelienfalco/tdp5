@@ -35,6 +35,8 @@ L_0 \times X = C
 E' = E - L_1 * U_1
 \end{equation}
 
+Netlib utilise une fonction spéciale pour calculer la taille des blocs du dgetrf. Nous avons choisi de notre côté de pouvoir passer cette valeur en paramètre du programme pour évaluer son impact sur les performances de la factorisation.
+
 \subsection{Parallélisme} % (fold)
 \label{sub:parallelisme}
 
@@ -43,7 +45,7 @@ Pour paralléliser les calculs sur plusieurs processeurs, une méthode est de di
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.8\textwidth]{serpentin}
-\caption{Distribution en serpentin}
+\caption{Distribution en serpentin pour 3 processus}
 \label{fig:serpentin}
 \end{figure}
 
