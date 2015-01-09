@@ -51,11 +51,13 @@ int main(int argc, char const *argv[])
 	}
 
 	if (myrank == 0)
-		fprintf(stderr, "%lf\n", 1000000*(MPI_Wtime() - initialTime));
+		fprintf(stdout, "%lf\n", 1000000*(MPI_Wtime() - initialTime));
 	
 	if (myrank == 0){
-		if (print)
+		if (print) {
+			printf("A\n");
 			print_matrix(A,m,n,m);
+		}
 		assert(equal_matrix(EqUpper,A,U,m,n,m) && equal_matrix(EqLower,A,L,m,n,m));
 	}
 	free(A);
