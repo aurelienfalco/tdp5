@@ -37,6 +37,7 @@ void mpi_cblas_lu(const enum CBLAS_ORDER order, const int m, const int n, double
 	int i, j, next_val = 0, inc = 1, nb_cols = 0, *cols_ref;
 	double **columns;
 	double *left_col;
+	double initialTime = 0.0;
 	MPI_Status status;
 	
 	MPI_Type_vector(1, col_size, col_size, MPI_DOUBLE, &type_column);
@@ -85,6 +86,9 @@ void mpi_cblas_lu(const enum CBLAS_ORDER order, const int m, const int n, double
 		}
 	}
 	
+	
+	if (myrank == 0)
+		initialTime = MPI_Wtime();
 	// LU decomposition
 	next_val = 0; inc = 1; j = 0;
 	for (int i = 0; i < MIN(m,n); i+=block_size) {
@@ -107,6 +111,11 @@ void mpi_cblas_lu(const enum CBLAS_ORDER order, const int m, const int n, double
 		serpentinSuivant(&next_val, &inc, nb_procs);
 	}
 	
+	MPI_Barrier(MPI_COMM_WORLD);
+	if (myrank == 0)
+		fprintf(stdout, "%lf\n", 1000000*(MPI_Wtime() - initialTime));
+
+
 	// Gather data on proc 0
 	if (myrank == 0) {
 		next_val = 0; inc = 1; j = 0;

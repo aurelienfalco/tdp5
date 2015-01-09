@@ -40,7 +40,7 @@ plot:
 	@eog $(stat).png 2>/dev/null &
 
 plot-sp: 
-	@gnuplot -e "name='Speedup';output='Speedup.png" plot_sp.gp 
+	@gnuplot -e "name='Speedup';data='speed.data';output='Speedup.png" plot_sp.gp 
 	@eog Speedup.png 2>/dev/null &
 
 clean:

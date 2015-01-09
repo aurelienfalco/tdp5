@@ -43,6 +43,7 @@ int main(int argc, char const *argv[])
 			if (print)
 				fprintf(stderr, "Sequential LU decomposition of size %d\n", m);
 			LAPACKE_dgetrf(CblasColMajor, m, n, A, m, block_size);
+			fprintf(stdout, "%lf\n", 1000000*(MPI_Wtime() - initialTime));
 		}
 	} else {
 		if (myrank == 0 && print)
@@ -50,8 +51,6 @@ int main(int argc, char const *argv[])
 		mpi_cblas_lu(CblasColMajor, m, n, A, m, block_size);
 	}
 
-	if (myrank == 0)
-		fprintf(stdout, "%lf\n", 1000000*(MPI_Wtime() - initialTime));
 	
 	if (myrank == 0){
 		if (print) {

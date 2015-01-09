@@ -17,12 +17,11 @@ Les courbes de performances ont été tracées avec gnuplot et permettent de sav
 \label{fig:diff}
 \end{figure}
 
-Comme l'indique la courbe de la Fig. \ref{fig:sp}, la parallélisation s'améliore avec la taille du problème. Nous avons fait les comparaisons avec MKL, et nous pouvons voir que nous sommes plus rapides pour des matrices de dimensions supérieures à $1000\times1000$, obtenant toutefois des performances moindres pour des tailles inférieures. Il faut cependant tenir compte du fait que MKL est déjà optimisé, et nos communications ralentissent donc (trop) le programme.
-
+Comme l'indique la courbe de la Fig. \ref{fig:sp}, le nombre de processeurs permet de réduire le temps d'exécution. Cette courbe a été tracée sur des matrices de dimensions $1024\times1024$
 \begin{figure}[H]
 \centering
-% \includegraphics[width=0.8\textwidth]{Speedup.png}
-\caption{Accélération de notre programme par rapport au code séquentiel}
+\includegraphics[width=0.8\textwidth]{Speedup.png}
+\caption{Accélération de notre programme par rapport au code séquentiel pour une matrice 1024x1024}
 \label{fig:sp}
 \end{figure}
 
