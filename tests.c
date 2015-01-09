@@ -32,7 +32,7 @@ int test_copy()
 	int n = N;
 	double* A = rand_matrix(m,n);
 	double* B = copy_matrix(A, m, n, m);
-	int copy = equal_matrix(0,A,B,m,n,m);
+	int copy = equal_matrix(EqAll,A,B,m,n,m);
 	if (print){
 		printf("A\n");
 		print_matrix(A,m,n,m);
@@ -79,7 +79,7 @@ int test_dgetf2()
 	double* A = init_matrix(n,n);
 	cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,n,n,n,1,L,n,U,n,1,A,n);
 	LAPACKE_dgetf2(CblasColMajor,n,n,A,n,NULL);
-	int equal = equal_matrix(1,A,U,m,n,m) && equal_matrix(2,A,L,m,n,m);
+	int equal = equal_matrix(EqUpper,A,U,m,n,m) && equal_matrix(EqLower,A,L,m,n,m);
 	if (print){
 		printf("L\n");
 		print_matrix(L,m,n,m);
@@ -117,7 +117,7 @@ int test_dtrsm()
 	double* E = init_matrix(m,n);
 	cblas_dtrsm(CblasColMajor, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, m, n, 1, L, m, B, m);
 	cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,m,n,m,1,L,m,B,m,1,A,m);
-	int equal = equal_matrix(0,A,C,m,n,m);
+	int equal = equal_matrix(EqAll,A,C,m,n,m);
 	if (print){
 		printf("B\n");
 		print_matrix(C,m,n,m);
@@ -130,7 +130,7 @@ int test_dtrsm()
 	double* D = copy_matrix(B,m,n,m);
 	cblas_dtrsm(CblasColMajor, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, m, n, 1, U, m, B, m);
 	cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,m,n,m,1,U,m,B,m,1,E,m);
-	equal &= equal_matrix(0,E,D,m,n,m);
+	equal &= equal_matrix(EqAll,E,D,m,n,m);
 	if (print){
 		printf("Y in dtrsm U Y = X \n");
 		print_matrix(B,m,n,m);
@@ -160,7 +160,7 @@ int test_dgetrf()
 	double* A = init_matrix(n,n);
 	cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,n,n,n,1,L,n,U,n,1,A,n);
 	LAPACKE_dgetrf(CblasColMajor, n, n, A, n, nb);
-	int equal = equal_matrix(1,A,U,m,n,m) && equal_matrix(2,A,L,m,n,m);
+	int equal = equal_matrix(EqUpper,A,U,m,n,m) && equal_matrix(EqLower,A,L,m,n,m);
 	if (print){
 		printf("L\n");
 		print_matrix(L,m,n,m);
@@ -189,7 +189,7 @@ int test_dgesv()
 	double* E = init_matrix(m,n);
 	LAPACKE_dgesv(CblasColMajor, m, 0, A, m, NULL, B, m);
 	cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,m,n,m,1,C,m,B,m,1,E,m);
-	int equal = equal_matrix(0,D,E,m,n,m);
+	int equal = equal_matrix(EqAll,D,E,m,n,m);
 	free(A);
 	free(B);
 	free(C);
@@ -219,7 +219,7 @@ int main(int argc, char** argv){
 	test_copy();
 	test_dtrsm();
 	test_dgetrf();
-	test_dgesv();
+	// test_dgesv();
 
 	return 0;
 }

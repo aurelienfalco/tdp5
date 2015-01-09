@@ -6,16 +6,28 @@ make
 #############
 # Execution #
 #############
-make exec n=a bs=b
-avec n le nombre de processus
-avec bs la taille des blocs de découpage de la matrice.
+make exec n=a m=size seq=bool
+Paramètres (optionnels):
+- n : le nombre de processus ;
+- m : la taille des blocs de découpage de la matrice ;
+- seq : un entier. Si égal à 0 : parallèle, sinon séquentiel ;
+- p : un entier. Si différent de 0, imprime les matrices L, U, et A finale.
+
 
 ##############
 # Validation #
 ##############
 make test N=n e=eps
-N correspond aux tailles de matrices utilisées pour les tests.
-e est la précision au delà de laquelle deux valeurs sont considérées comme fausses.
+Paramètres (optionnels):
+- N correspond aux tailles de matrices utilisées pour les tests ;
+- e est la précision au delà de laquelle deux valeurs sont considérées comme fausses ;
+- p : un entier. Si différent de 0, imprime les matrices calculées.
+
+
+#########
+# Stats #
+#########
+make stat
 
 ###########
 # Courbes #

@@ -7,11 +7,12 @@ OBJ=$(SRC:.c=.o)
 CFLAGS = -std=c99 -g -O0 -Wall -Wextra
 n = 2
 m = 6
+seq = 0
 
 all: $(EXEC)
 
 exec: $(EXEC)
-	$(EX) -np $(n) $(EXEC) $(m) $(seq)
+	@$(EX) -np $(n) $(EXEC) $(m) $(seq) $(p)
 
 qsub: $(EXEC)
 	rm -rf res.*
@@ -30,6 +31,9 @@ tests: $(OBJ) tests.o
 
 test: tests
 	./tests $(N) $(e) $(p)
+
+stat: $(EXEC)
+	./stats.sh
 
 plot: 
 	@gnuplot -e "name='$(stat)';output='$(stat).png" plot_fox.gp 

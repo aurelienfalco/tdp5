@@ -11,6 +11,8 @@
 
 #define MIN(a,b) ((a)<(b)?(a):(b))
 
+enum EQUAL_TYPE {EqAll, EqUpper, EqLower};
+
 double* init_matrix(int m, int n);
 double* rand_matrix(int m, int n);
 void print_matrix(double* A, int m, int n, int lda);
