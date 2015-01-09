@@ -213,8 +213,8 @@ int main(int argc, char** argv){
 		print = atof(argv[3]);
 	}
 
-	// test_triangular();
-	// test_dgemm();
+	test_triangular();
+	test_dgemm();
 	test_dgetf2();
 	test_copy();
 	test_dtrsm();

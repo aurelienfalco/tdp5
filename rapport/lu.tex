@@ -11,7 +11,7 @@
 \label{fig:lu}
 \end{figure}
 
-Pour ce projet, nous utilisons la factorisation LU right-looking, illustrée par la figure \ref{fig:lu}. Nous pouvons y voir une partie de la factorisation déjà effectuée (L et U). Ensuite, nous appliquons l'algorithme expliqué (de façon simplifié) en Fig. \ref{code:lu}.
+Pour ce projet, nous utilisons la factorisation LU right-looking, illustrée par la figure \ref{fig:lu}. Nous pouvons y voir une partie de la factorisation déjà effectuée (L et U). Ensuite, nous appliquons l'algorithme expliqué (de façon simplifié) en Fig. \ref{code:lu}. $m$ correspond au nombre de lignes de la matrice et $n$ au nombre de colonnes. 
 
 \begin{figure}[H]
 \begin{lstlisting}
@@ -23,7 +23,7 @@ for (j = 0; j < MIN(m,n); j+=nb)
 \caption{Décomposition LU (dgetrf)}
 \label{code:lu}
 \end{figure}
-Sur $B$, de largeur $nb$, nous effectuons une décomposition LU (dgetf2 ou dgetrf par exemple, mais ici nous avons utilisé dgetf2, étant donné que $nb$ est censé être relativement petit). Puis nous pouvons exécuter un dtrsm sur $L_0$ et $C$, essayant de résoudre l'équation \ref{eq:dtrsm}, et affectant le résultat dans $U_1$. Enfin, nous effectuons un dgemm sur $L_1$, $U_1$ et $E$, effectuant l'opération décrite dans l'équation \ref{eq:dgemm}. Puis nous itérons et réexécutons la totalité de ce procédé sur $E'$
+Sur $B$, de largeur $nb$ prédéfinie, nous effectuons une décomposition LU (dgetf2 ou dgetrf par exemple, mais ici nous avons utilisé dgetf2, étant donné que $nb$ est censé être relativement petit). Puis nous pouvons exécuter un dtrsm sur $L_0$ et $C$, essayant de résoudre l'équation \ref{eq:dtrsm}, et affectant le résultat dans $U_1$. Enfin, nous effectuons un dgemm sur $L_1$, $U_1$ et $E$, effectuant l'opération décrite dans l'équation \ref{eq:dgemm}. Puis nous itérons et réexécutons la totalité de ce procédé sur $E'$
 
 \begin{equation}
 \label{eq:dtrsm}

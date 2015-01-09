@@ -11,6 +11,7 @@
 
 #define MIN(a,b) ((a)<(b)?(a):(b))
 
+// Enumeration to differentiate comparisons between Upper, Lower or regular matrix
 enum EQUAL_TYPE {EqAll, EqUpper, EqLower};
 
 double* init_matrix(int m, int n);

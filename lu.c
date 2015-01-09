@@ -90,6 +90,7 @@ void mpi_cblas_lu(const enum CBLAS_ORDER order, const int m, const int n, double
 	if (myrank == 0)
 		initialTime = MPI_Wtime();
 	// LU decomposition
+	
 	next_val = 0; inc = 1; j = 0;
 	for (int i = 0; i < MIN(m,n); i+=block_size) {
 		int ib = MIN(MIN(m,n)-i,block_size);

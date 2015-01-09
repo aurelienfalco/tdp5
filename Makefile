@@ -6,13 +6,17 @@ SRC=$(ALG:=.c)
 OBJ=$(SRC:.c=.o)
 CFLAGS = -std=c99 -g -O0 -Wall -Wextra
 n = 2
-m = 6
+m = 128
+N = 5
+e = 0.001
+p = 0
 seq = 0
+stat = sp-proc
 
 all: $(EXEC)
 
 exec: $(EXEC)
-	@$(EX) -np $(n) $(EXEC) $(m) $(seq) $(p)
+	$(EX) -np $(n) $(EXEC) $(m) $(seq) $(p)
 
 qsub: $(EXEC)
 	rm -rf res.*
@@ -36,12 +40,12 @@ stat: $(EXEC)
 	./stats.sh
 
 plot: 
-	@gnuplot -e "name='$(stat)';output='$(stat).png" plot_fox.gp 
+	@gnuplot -e "xname='Nombre de processus';name='$(stat)';data='$(stat).data';output='$(stat).png" plot_sp.gp 
 	@eog $(stat).png 2>/dev/null &
 
 plot-sp: 
-	@gnuplot -e "name='Speedup';data='speed.data';output='Speedup.png" plot_sp.gp 
-	@eog Speedup.png 2>/dev/null &
+	@gnuplot -e "xname='Longueur du côté des matrices';name='Speedup';data='sp-size.data';output='sp-size.png" plot_sp.gp 
+	@eog sp-size.png 2>/dev/null &
 
 clean:
 	rm -rf *.o $(EXEC) tests *~
