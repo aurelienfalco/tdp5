@@ -5,11 +5,13 @@ ALG = dger dgetf2 lu dscal util dgemm_scalaire dtrsm dgesv dgetrf
 SRC=$(ALG:=.c)
 OBJ=$(SRC:.c=.o)
 CFLAGS = -std=c99 -g -O0 -Wall -Wextra
+n = 2
+m = 6
 
 all: $(EXEC)
 
 exec: $(EXEC)
-	@$(EX) -np $(n) $(EXEC)
+	$(EX) -np $(n) $(EXEC) $(m) $(scal)
 
 qsub: $(EXEC)
 	rm -rf res.*

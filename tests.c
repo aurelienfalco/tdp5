@@ -154,11 +154,12 @@ int test_dgetrf()
 	printf("Test dgetrf....\n");
 	int n = N;
 	int m = N;
+	int nb = N/4;
 	double* L = rand_tri_inf(n);
 	double* U = rand_tri_sup(n);
 	double* A = init_matrix(n,n);
 	cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,n,n,n,1,L,n,U,n,1,A,n);
-	LAPACKE_dgetrf(CblasColMajor, n, n, A, n, NULL);
+	LAPACKE_dgetrf(CblasColMajor, n, n, A, n, nb);
 	int equal = equal_matrix(1,A,U,m,n,m) && equal_matrix(2,A,L,m,n,m);
 	if (print){
 		printf("L\n");
@@ -199,39 +200,6 @@ int test_dgesv()
 	return 0;
 }
 
-int test_lu_block()
-{
-	printf("Test lu block....\n");
-	int m = N;
-	int n = N;
-	double* L = rand_tri_inf(n);
-	double* U = rand_tri_sup(n);
-	double* A = init_matrix(m,n);
-	cblas_dgemm(CblasColMajor,CblasNoTrans,CblasNoTrans,n,n,n,1,L,n,U,n,1,A,n);
-	if (print){
-		printf("A\n");
-		print_matrix(A,m,n,m);
-	}	
-
-	cblas_lu(CblasColMajor, n, n, A, n, 3);
-	int equal = equal_matrix(1,A,U,m,n,m) && equal_matrix(2,A,L,m,n,m);
-	if (print){
-		printf("L\n");
-		print_matrix(L,m,n,m);
-		printf("U\n");
-		print_matrix(U,m,n,m);
-		printf("A\n");
-		print_matrix(A,m,n,m);
-	}	
-	free(L);
-	free(U);
-	free(A);
-	assert(equal);
-	printf("[OK]\n");
-	return 0;
-}
-
-
 int main(int argc, char** argv){
 	(void)argc;	(void)argv;
 	srand(time(NULL));
@@ -251,8 +219,7 @@ int main(int argc, char** argv){
 	test_copy();
 	test_dtrsm();
 	test_dgetrf();
-	// test_dgesv();
-	test_lu_block();
+	test_dgesv();
 
 	return 0;
 }

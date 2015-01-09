@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
 
 // TODO: assigner de vrai tags aux messages
 //--map-by ppr:1:node -by-node
@@ -36,9 +37,6 @@ void mpi_cblas_lu(const enum CBLAS_ORDER order, const int m, const int n, double
 	double **columns;
 	double *left_col;
 	MPI_Status status;
-	print_matrix(a,m,n,lda);
-	
-	MPI_Init(NULL, NULL);
 	
 	MPI_Type_vector(1, col_size, col_size, MPI_DOUBLE, &type_column);
 	MPI_Type_commit(&type_column);
@@ -52,10 +50,11 @@ void mpi_cblas_lu(const enum CBLAS_ORDER order, const int m, const int n, double
 			disps[i * side_size + j] = i * blocks_by_line * block_size + j * block_size;
 			counts [i * side_size + j] = 1;
 		}
-	}*/
+	}
+	*/
 
-		MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
-		MPI_Comm_size(MPI_COMM_WORLD, &nb_procs);
+	MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
+	MPI_Comm_size(MPI_COMM_WORLD, &nb_procs);
 
 	// Count the number of columns owned
 		next_val = 0; inc = 1;
@@ -101,7 +100,6 @@ void mpi_cblas_lu(const enum CBLAS_ORDER order, const int m, const int n, double
 
 			LAPACKE_dgetf2(order, m-i, ib, columns[j]+i, m, NULL);
 			memcpy(left_col, columns[j], col_size * sizeof (double));
-			print_matrix(left_col,m,block_size,m);
 			MPI_Bcast(left_col, 1, type_column, next_val, MPI_COMM_WORLD);
 			j++;
 		}
@@ -110,13 +108,9 @@ void mpi_cblas_lu(const enum CBLAS_ORDER order, const int m, const int n, double
 		}
 
 		for(int k = j; k < nb_cols; k++) {
-			printf("dtrsm %d\n",cols_ref[k] );
 			cblas_dtrsm(order, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, ib, ib, 1, left_col+i, lda, columns[k]+i, lda );
 
 			cblas_dgemm(order, CblasNoTrans, CblasNoTrans, m-i-ib, ib, ib, -1, left_col + i + ib, lda, columns[k]+i, lda, 1,  columns[k] + i + ib  , lda);
-			printf("dgemm %d\n",cols_ref[k] );
-			printf("\n");
-			print_matrix(columns[k],m,block_size,m);
 		}
 
 		serpentinSuivant(&next_val, &inc, nb_procs);
@@ -152,23 +146,4 @@ void mpi_cblas_lu(const enum CBLAS_ORDER order, const int m, const int n, double
 		free(columns[i]);
 	}
 	
-	MPI_Finalize();
-}
-#include "util.h"
-#include <assert.h>
-
-void cblas_lu(const enum CBLAS_ORDER order, const int m, const int n, double* a, int lda, int nb)
-{
-	assert(order == CblasColMajor);
-	for (int j = 0; j < MIN(m,n); j+=nb) {
-		int jb = MIN(MIN(m,n)-j,nb);
-		LAPACKE_dgetf2(order, m-j, jb, &a[j * lda + j], lda, NULL);
-		for (int i = j+jb; i < MIN(m,n); i+=jb)
-		{
-			int ib = MIN(MIN(m,n)-i,jb);
-			cblas_dtrsm(order, CblasLeft, CblasLower, CblasNoTrans, CblasUnit, ib, ib, 1, &a[j + lda * j], lda, &a[j + lda * i], lda );
-			cblas_dgemm(order, CblasNoTrans, CblasNoTrans, m-j-jb, ib, ib, -1, &a[j + jb + j * lda], lda,&a[j +  i * lda], lda, 1, &a[j + jb + lda * i], lda);
-		}
-	}
-	print_matrix(a,m,n,lda);
 }
