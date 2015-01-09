@@ -8,7 +8,7 @@
 int main(int argc, char const *argv[])
 {
 	int myrank, seq = 0, print = 0;
-	int m = 6, n = 6, block_size = 4;
+	int m = 128, n = 128, block_size = 64;
 	double initialTime = 0.0;
 
 	MPI_Init(NULL, NULL);
