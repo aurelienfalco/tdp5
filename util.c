@@ -77,7 +77,7 @@ double* copy_matrix(double* B, int m, int n, int lda)
 int equal_matrix(int UPLO, double* A, double* B, int m, int n, int lda)
 {
 	switch (UPLO){
-		case 0: // ordinary matrix
+		case EqAll: // ordinary matrix
 		for (int i = 0; i < m; ++i){
 			for (int j = 0; j < n; ++j){
 				if (fabs(A[i + j * lda] - B[i + j * lda]) > epsilon){
@@ -87,7 +87,7 @@ int equal_matrix(int UPLO, double* A, double* B, int m, int n, int lda)
 			}
 		}
 		break;
-		case 1: // UPPER matrix
+		case EqUpper: // UPPER matrix
 		for (int i = 0; i < m; ++i){
 			for (int j = i; j < n; ++j){
 				if (fabs(A[i + j * lda] - B[i + j * lda]) > epsilon){
@@ -97,7 +97,7 @@ int equal_matrix(int UPLO, double* A, double* B, int m, int n, int lda)
 			}
 		}
 		break;
-		case 2: // LOWER matrix
+		case EqLower: // LOWER matrix
 		for (int i = 0; i < m; ++i){
 			for (int j = 0; j < i; ++j){
 				if (fabs(A[i + j * lda] - B[i + j * lda]) > epsilon){
