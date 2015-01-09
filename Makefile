@@ -11,7 +11,7 @@ m = 6
 all: $(EXEC)
 
 exec: $(EXEC)
-	$(EX) -np $(n) $(EXEC) $(m) $(scal)
+	$(EX) -np $(n) $(EXEC) $(m) $(seq)
 
 qsub: $(EXEC)
 	rm -rf res.*
