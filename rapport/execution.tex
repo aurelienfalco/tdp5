@@ -10,7 +10,8 @@ Nous avons remarqué que pour des matrices de taille croissantes, des erreurs d'
 \section{Performances} % (fold)
 \label{sec:perf}
 
-Une série de tests est lancée sur différentes tailles de matrice ou différents nombres de processus plusieurs fois, afin d'obtenir des temps d'exécution moyens. Nous avons remarqué que l'algorithme passait beaucoup de temps dans les fonctions de répartition des données sur les processus. Aussi avons-nous comparé les temps de calculs seulement. \\
+Une série de tests est lancée sur différentes tailles de matrice ou différents nombres de processus plusieurs fois, afin d'obtenir des temps d'exécution moyens. Nous avons remarqué que l'algorithme passait beaucoup de temps dans les fonctions de répartition des données sur les processus (peu optimisées). Aussi avons-nous comparé les temps de calculs seulement. \\
+
 La largeur des colonnes a été fixée à $64$, afin de pouvoir exécuter les calculs sur des matrices dont les tailles étaient des puissances de 2, pour simplifier la lecture des résultats. 
 La Figure \ref{fig:sp-size} montre que plus les calculs sont importants, plus la parallélisation est effective.
 
