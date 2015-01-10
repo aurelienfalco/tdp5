@@ -1,11 +1,11 @@
 \section{Exécution \& tests} % (fold)
 \label{sec:execution}
 
-Pour ce projet, nous avons effectué des tests de validation sur les fonctions algébriques, afin de s'assurer que celles-ci marchaient correctement, et pouvoir plus facilement isoler les problèmes. De même, le code a été segmenté pour permettre une lecture plus aisée de l'ordre dans lequel s'effectuent les diverses opérations. Afin de facilité la mise en oeuvre de la factorisation par bloc, nous avons choisi de ne pas traiter les cas où la taille des blocs n'est pas multiple de la largeur et la longueur de la matrice.\\
+Pour ce projet, nous avons effectué des tests de validation sur les fonctions algébriques, afin de s'assurer que celles-ci marchaient correctement, et pouvoir plus facilement isoler les problèmes. De même, le code a été segmenté pour permettre une lecture plus aisée de l'ordre dans lequel s'effectuent les diverses opérations. Afin de faciliter la mise en oeuvre de la factorisation par bloc, nous avons choisi de ne pas traiter les cas où la taille des blocs n'est pas multiple de la largeur et la longueur de la matrice.\\
 
 Plusieurs fonctions intermédiaires ont été écrites afin de simplifier l'affichage, la génération ou encore la comparaison entre matrices (voir util.c et util.h).
 
-Nous avons remarqué que pour des matrices de taille croissantes, des erreurs d'arrondis apparaissaient et se propagaient rapidement. Ainsi, pour des matrics de taille $30 \times 30$, les erreurs commençaient à être significatives dans le calcul du dtrsm (de l'ordre de $0.1$). Nous n'avons pas remarqué ce genre d'erreurs dans les autres algorithmes toutefois, excepté dgesv qui utilise directement deux dtrsm. 
+Nous avons remarqué que pour des matrices de tailles croissantes, des erreurs d'arrondis apparaissaient et se propagaient rapidement. Ainsi, pour des matrices de taille $30 \times 30$, les erreurs commençaient à être significatives dans le calcul du dtrsm (de l'ordre de $0.1$). Nous n'avons pas remarqué ce genre d'erreurs dans les autres algorithmes toutefois, excepté dgesv qui utilise directement deux dtrsm. 
 
 \section{Performances} % (fold)
 \label{sec:perf}
